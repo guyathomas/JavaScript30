@@ -18,10 +18,14 @@
     <input id="base" type="color" name="base" value="#ffc600">
   </div>
 
-  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+  <img class="hero" src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
-
+    :root {
+      --base-color: #ffc600;
+      --blur-size: 10px;
+      --spacing: 10px;
+    }
     /*
       misc styles, nothing to do with CSS variables
     */
@@ -35,6 +39,16 @@
       font-size: 50px;
     }
 
+    .hl {
+      color: var(--base-color);
+    }
+
+    .hero {
+      filter: blur(var(--blur-size));
+      padding: var(--spacing);
+      background-color: var(--base-color);
+    }
+
     .controls {
       margin-bottom: 50px;
     }
@@ -45,6 +59,21 @@
   </style>
 
   <script>
+    function handleChange( event ) {
+      const { id, value } = event.target;
+      switch( id ) {
+        case 'spacing':
+          document.documentElement.style.setProperty('--spacing', `${ value }px`);
+          break;
+        case 'blur':
+          document.documentElement.setProperty('--blur-size', `${ value }px`);
+          break;
+        case 'base':
+          document.documentElement.style.setProperty('--base-color', value);
+          break;
+      }
+    }
+    controls.onchange = handleChange;
   </script>
 
 </body>
