@@ -58,7 +58,56 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  // Cache the dom elements with audio for quick access;
+  const audioEls = [...document.querySelectorAll("audio[data-key]")].reduce((acc, el) => {
+      acc[el.dataset.key] = el;
+      return acc;
+  }, {});
 
+  const tileEls = [...document.querySelectorAll(".keys [data-key]")].reduce((acc, el) => {
+      acc[el.dataset.key] = el;
+      return acc;
+  }, {});
+
+  function getKeyCodeForDrums( event ) {
+    let pressedKey = event.keyCode;
+    if ( pressedKey >= 97 && pressedKey <= 122 ) pressedKey -= 32;
+    return pressedKey;
+  }
+
+  function playAudio( keyCode ) {
+    const audio = audioEls[ keyCode ];
+    if ( audio ) {
+     audio.currentTime = 0;
+     audio.play();
+    }
+  }
+
+  function toggleVisuals( keyCode ) {
+    if ( tileEls[ keyCode ] ) {
+      if ( tileEls[ keyCode ].classList.contains('active') ) {
+        tileEls[ keyCode ].classList.remove('active')
+      } else {
+        tileEls[ keyCode ].classList.add('active')
+      }
+    }
+  }
+
+  function handleKeyPress( event ) {
+    const keyCode = getKeyCodeForDrums( event );
+    if ( keyCode < 65 || keyCode > 90 ) return;
+    playAudio(keyCode);
+    toggleVisuals(keyCode);
+  }
+
+  function handleKeyUp( event ) {
+    const keyCode = getKeyCodeForDrums( event );
+    if ( keyCode < 65 || keyCode > 90 ) return;
+    toggleVisuals(keyCode);
+  }
+
+  document.onkeypress = handleKeyPress
+  document.onkeyup = handleKeyUp
 </script>
 
 

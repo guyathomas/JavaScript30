@@ -62,11 +62,35 @@
       background:black;
       position: absolute;
       top:50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
     }
 
   </style>
 
   <script>
+    const secondHand = document.getElementsByClassName('second-hand')[ 0 ];
+    const minuteHand = document.getElementsByClassName('min-hand')[ 0 ];
+    const hourHand = document.getElementsByClassName('hour-hand')[ 0 ];
+
+    const calculateTransform = percentage => percentage * 360 + 90;
+    
+    const updateClockFace = () => {
+      const time = new Date();
+      const seconds = time.getSeconds();
+      const minutes = time.getMinutes()
+      const hours = time.getHours();
+
+      const secondsRotation = calculateTransform( seconds / 60 );
+      const minutesRotation = calculateTransform( minutes / 60 );
+      const hoursRotation = calculateTransform( hours / 24 );
+
+      secondHand.style.transform = `rotate(${ secondsRotation }deg)`;
+      minuteHand.style.transform = `rotate(${ minutesRotation }deg)`;
+      hourHand.style.transform = `rotate(${ hoursRotation }deg)`;
+    }
+
+    setInterval(updateClockFace, 1000);
 
 
   </script>
