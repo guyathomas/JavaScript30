@@ -7,6 +7,34 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+  const canvas = document.querySelector('#draw');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx.fillStyle = "#FF0000";
+  // ctx.fillRect(0,0,150,75);
+
+  let drawing = 0;
+  let lastX = 0;
+  let lastY = 0;
+
+  function draw( { offsetX, offsetY } ) {
+    if ( !drawing ) return;
+
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo( offsetX, offsetY );
+    ctx.stroke();
+    [ lastX, lastY ] = [ offsetX, offsetY ];
+  }
+
+  canvas.addEventListener( 'mousedown', ( { offsetX, offsetY } ) => {
+    drawing = true;
+    [lastX, lastY] = [ offsetX, offsetY ];
+  } );
+  canvas.addEventListener( 'mousemove', draw );
+  canvas.addEventListener( 'mouseleave', () => drawing = false );
+  canvas.addEventListener( 'mouseup', () => drawing = false );
 </script>
 
 <style>

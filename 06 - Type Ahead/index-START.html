@@ -15,8 +15,50 @@
     </ul>
   </form>
 <script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+let locations;
+const searchInputEl = document.querySelector('.search-form .search');
+const resultsEl = document.querySelector('.suggestions');
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+const headers = `
+  <li>Filter for a city</li>
+  <li>or a state</li>
+`;
+
+const addSpans = ( string, re ) => string.replace(re, ( string ) => `<span class="hl">${ string }</span>`);
+
+function generateResult( city, state, population ) {
+  return `
+    <li>
+      <span class="name">${ city }, ${ state }</span>
+      <span class="population">${ population }</span>
+    </li>
+  `;
+}
+
+function filterRenderedResults( event ) {
+  const { value } = event.target;
+  if ( !value ) { 
+    resultsEl.innerHTML = headers;
+    return;
+  }
+  const re = new RegExp(value, 'gi');
+  const results = locations
+    .filter(location => ( re.test(location.city) || re.test(location.state) ))
+    .map(( { city, state, population }) => {
+      const cityHTML = addSpans(city, re);
+      const stateHTML = addSpans(state, re);
+      return generateResult( cityHTML, stateHTML, population );
+    })
+    .join('');
+  resultsEl.innerHTML = results;
+}
+
+fetch(endpoint)
+.then(res => res.json())
+.then(json => { locations = json; })
+
+searchInputEl.addEventListener('keyup', filterRenderedResults);
 </script>
   </body>
 </html>
