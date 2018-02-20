@@ -99,6 +99,34 @@
   </div>
 
 <script>
+  function selectCheckboxes( newIndex ) {
+    if (!shiftDown) { 
+      recentIndex = newIndex;
+      return; 
+    }
+
+    // Moving down
+    if ( newIndex > recentIndex ) {
+      for ( let i = recentIndex + 1; i < newIndex; i++ ) {
+        checkboxes[i].checked = true;
+      }
+    }
+    
+    // Moving up
+    if ( newIndex < recentIndex ) {
+      for ( let i = recentIndex - 1; i > newIndex; i-- ) {
+        checkboxes[i].checked = true;
+      }
+    }
+    recentIndex = newIndex;
+  }
+  let shiftDown = false;
+  const shiftKey = 16;
+  let recentIndex;
+  window.onkeydown = ({ keyCode }) => keyCode === shiftKey && ( shiftDown = true );
+  window.onkeyup = ({ keyCode }) => keyCode === shiftKey && ( shiftDown = false );
+  const checkboxes = [ ...document.querySelectorAll('.item [type="checkbox"]')];
+  checkboxes.forEach( (checkbox, i ) => checkbox.addEventListener('change', selectCheckboxes.bind(this, i)))
 </script>
 </body>
 </html>
